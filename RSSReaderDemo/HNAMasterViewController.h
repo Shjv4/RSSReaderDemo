@@ -10,8 +10,11 @@
 
 @class HNADetailViewController;
 
-@interface HNAMasterViewController : UITableViewController
-
+@interface HNAMasterViewController : UITableViewController {
+// declare variables
+NSMutableArray *_allEntries;
+}
+@property (retain) NSMutableArray *allEntries;
 @property (strong, nonatomic) HNADetailViewController *detailViewController;
 
 @end

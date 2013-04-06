@@ -7,8 +7,8 @@
 //
 
 #import "HNAMasterViewController.h"
-
 #import "HNADetailViewController.h"
+#import "HNARSSEntry.h"
 
 @interface HNAMasterViewController () {
     NSMutableArray *_objects;
@@ -16,6 +16,7 @@
 @end
 
 @implementation HNAMasterViewController
+@synthesize allEntries = _allEntries;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -28,8 +29,10 @@
 							
 - (void)dealloc
 {
-    [_detailViewController release];
-    [_objects release];
+    //[_detailViewController release];
+    //[_objects release];
+    [_allEntries release];
+    _allEntries = nil;
     [super dealloc];
 }
 
@@ -37,10 +40,16 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    /*
     self.navigationItem.leftBarButtonItem = self.editButtonItem;
 
     UIBarButtonItem *addButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)] autorelease];
     self.navigationItem.rightBarButtonItem = addButton;
+    */
+    self.title = @"Feeds";
+    self.allEntries = [NSMutableArray array];
+    [self addRows];
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -68,7 +77,8 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return _objects.count;
+    //return _objects.count;
+    return [_allEntries count];
 }
 
 // Customize the appearance of table view cells.
@@ -78,13 +88,23 @@
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier] autorelease];
+        //cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
 
-
+    /*
     NSDate *object = _objects[indexPath.row];
     cell.textLabel.text = [object description];
+    return cell; 
+    */
+    HNARSSEntry *entry = [_allEntries objectAtIndex:indexPath.row];
+    NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
+    [dateFormatter setTimeStyle:NSDateFormatterMediumStyle];
+    [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
+    NSString *articleDateString = [dateFormatter stringFromDate:entry.articleDate];
+    NSLog(@"%@", articleDateString);
+    cell.textLabel.text = entry.articleTitle;
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ - %@", articleDateString, entry.blogTitle];
     return cell;
 }
 
@@ -130,4 +150,13 @@
     [self.navigationController pushViewController:self.detailViewController animated:YES];
 }
 
+// Add new method
+- (void)addRows {
+    HNARSSEntry *entry1 = [[[HNARSSEntry alloc] initWithBlogTitle:@"Article no 1" articleTitle:@"This is title of article 1" articleUrl:@"1" articleDate:[NSDate date]] autorelease];
+    HNARSSEntry *entry2 = [[[HNARSSEntry alloc] initWithBlogTitle:@"Article no 2" articleTitle:@"This is title of article 2" articleUrl:@"2" articleDate:[NSDate date]] autorelease];
+    HNARSSEntry *entry3 = [[[HNARSSEntry alloc] initWithBlogTitle:@"Article no 3" articleTitle:@"This is title of article 3" articleUrl:@"3" articleDate:[NSDate date]] autorelease];
+    [_allEntries insertObject:entry1 atIndex:0];
+    [_allEntries insertObject:entry2 atIndex:0];
+    [_allEntries insertObject:entry3 atIndex:0];
+}
 @end

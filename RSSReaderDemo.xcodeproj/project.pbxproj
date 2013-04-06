@@ -20,6 +20,7 @@
 		3257DEE6171069F600C32F61 /* HNADetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3257DEE5171069F600C32F61 /* HNADetailViewController.m */; };
 		3257DEE9171069F600C32F61 /* HNAMasterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3257DEE7171069F600C32F61 /* HNAMasterViewController.xib */; };
 		3257DEEC171069F600C32F61 /* HNADetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3257DEEA171069F600C32F61 /* HNADetailViewController.xib */; };
+		3257DEF417106B4200C32F61 /* HNARSSEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 3257DEF317106B4200C32F61 /* HNARSSEntry.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +43,8 @@
 		3257DEE5171069F600C32F61 /* HNADetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HNADetailViewController.m; sourceTree = "<group>"; };
 		3257DEE8171069F600C32F61 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/HNAMasterViewController.xib; sourceTree = "<group>"; };
 		3257DEEB171069F600C32F61 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/HNADetailViewController.xib; sourceTree = "<group>"; };
+		3257DEF217106B4200C32F61 /* HNARSSEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HNARSSEntry.h; path = ../HNARSSEntry.h; sourceTree = "<group>"; };
+		3257DEF317106B4200C32F61 /* HNARSSEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HNARSSEntry.m; path = ../HNARSSEntry.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,6 +91,8 @@
 		3257DECF171069F600C32F61 /* RSSReaderDemo */ = {
 			isa = PBXGroup;
 			children = (
+				3257DEF217106B4200C32F61 /* HNARSSEntry.h */,
+				3257DEF317106B4200C32F61 /* HNARSSEntry.m */,
 				3257DED8171069F600C32F61 /* HNAAppDelegate.h */,
 				3257DED9171069F600C32F61 /* HNAAppDelegate.m */,
 				3257DEE1171069F600C32F61 /* HNAMasterViewController.h */,
@@ -187,6 +192,7 @@
 				3257DEDA171069F600C32F61 /* HNAAppDelegate.m in Sources */,
 				3257DEE3171069F600C32F61 /* HNAMasterViewController.m in Sources */,
 				3257DEE6171069F600C32F61 /* HNADetailViewController.m in Sources */,
+				3257DEF417106B4200C32F61 /* HNARSSEntry.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
