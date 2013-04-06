@@ -9,6 +9,7 @@
 #import "HNAMasterViewController.h"
 #import "HNADetailViewController.h"
 #import "HNARSSEntry.h"
+#import "ASIHTTPRequest.h"
 
 @interface HNAMasterViewController () {
     NSMutableArray *_objects;
@@ -17,6 +18,8 @@
 
 @implementation HNAMasterViewController
 @synthesize allEntries = _allEntries;
+@synthesize feeds = _feeds;
+@synthesize queue = _queue;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -29,10 +32,16 @@
 							
 - (void)dealloc
 {
-    //[_detailViewController release];
-    //[_objects release];
+    [_detailViewController release];
+    [_objects release];
+    // Demo 1st time
     [_allEntries release];
     _allEntries = nil;
+    // Demo 2nd time
+    [_queue release];
+    _queue = nil;
+    [_feeds release];
+    _feeds = nil;
     [super dealloc];
 }
 
@@ -46,10 +55,20 @@
     UIBarButtonItem *addButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)] autorelease];
     self.navigationItem.rightBarButtonItem = addButton;
     */
+    
+    // Demo 1st time
+    /*
     self.title = @"Feeds";
     self.allEntries = [NSMutableArray array];
     [self addRows];
+     */
     
+    // Demo 2nd time
+    self.title = @"Feeds";
+    self.allEntries = [NSMutableArray array];
+    self.queue = [[[NSOperationQueue alloc] init] autorelease];
+    self.feeds = [NSArray arrayWithObjects:@"http://kites.vn/rss.html", @"http://kites.vn/forum.php?mod=rss&auth=0", nil];
+    [self refresh];
 }
 
 - (void)didReceiveMemoryWarning
@@ -102,7 +121,7 @@
     [dateFormatter setTimeStyle:NSDateFormatterMediumStyle];
     [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
     NSString *articleDateString = [dateFormatter stringFromDate:entry.articleDate];
-    NSLog(@"%@", articleDateString);
+    //NSLog(@"%@", articleDateString);
     cell.textLabel.text = entry.articleTitle;
     cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ - %@", articleDateString, entry.blogTitle];
     return cell;
@@ -150,7 +169,8 @@
     [self.navigationController pushViewController:self.detailViewController animated:YES];
 }
 
-// Add new method
+#pragma mark - Handle view of feeds
+// Add some record for demo
 - (void)addRows {
     HNARSSEntry *entry1 = [[[HNARSSEntry alloc] initWithBlogTitle:@"Article no 1" articleTitle:@"This is title of article 1" articleUrl:@"1" articleDate:[NSDate date]] autorelease];
     HNARSSEntry *entry2 = [[[HNARSSEntry alloc] initWithBlogTitle:@"Article no 2" articleTitle:@"This is title of article 2" articleUrl:@"2" articleDate:[NSDate date]] autorelease];
@@ -159,4 +179,26 @@
     [_allEntries insertObject:entry2 atIndex:0];
     [_allEntries insertObject:entry3 atIndex:0];
 }
+// Refresh URL
+- (void)refresh {
+    for (NSString *feed in _feeds) {
+        NSURL *url = [NSURL URLWithString:feed];
+        ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+        [request setDelegate:self];
+        [_queue addOperation:request];
+    }
+}
+// Do after successfully get a request
+- (void)requestFinished:(ASIHTTPRequest *)request {
+    HNARSSEntry *entry = [[[HNARSSEntry alloc] initWithBlogTitle:request.url.absoluteString articleTitle:request.url.absoluteString articleUrl:request.url.absoluteString articleDate:[NSDate date]] autorelease];
+    int insertIndex = 0;
+    [_allEntries insertObject:entry atIndex:insertIndex];
+    [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:insertIndex inSection:0]] withRowAnimation:UITableViewRowAnimationRight];
+}
+// Do after fail to get a request
+- (void)requestFailed:(ASIHTTPRequest *)request {
+    NSError *error = [request error];
+    NSLog(@"Error: %@", error);
+}
+
 @end
